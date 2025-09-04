@@ -1,80 +1,51 @@
-version: "3.9"
+version: '3.8'
+
 services:
-  web:
+  n8n-autogen-service:
     build:
-      context: ./WebwithMCP-main
+      context: .
       dockerfile: Dockerfile
+    container_name: n8n-autogen-service
     ports:
-      - "8003:8003"
-    depends_on:
-      mysql:
-        condition: "service_healthy"
-      n8n_mcp:
-        condition: "service_healthy"
+      - "8003:8003"  # 对外暴露的FastAPI服务端口
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MCP_HOST: n8n_mcp:3456
-      HISTORY_DATABASE: chatdb
-
-  n8n_mcp:
-    build:
-      context: ./mcp-n8n-workflow-builder
-      dockerfile: Dockerfile
-    ports:
-      - "3456:3456"
-    depends_on:
-      - n8n
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3456/health"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 5s
-
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: n8n
-    restart: unless-stopped
-    ports:
-      - "5678:5678"
-    depends_on:
-      - mysql
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=admin
-      - DB_TYPE=mysql
-      - DB_MYSQLDB_HOST=mysql
-      - DB_MYSQLDB_PORT=3306
-      - DB_MYSQLDB_DATABASE=n8n
-      - DB_MYSQLDB_USER=root
-      - DB_MYSQLDB_PASSWORD=root
+      - MCP_PORT=3456
+      - BACKEND_PORT=8003
+      - PYTHONPATH=/app/WebwithMCP-main/backend
+      - NODE_ENV=production
+      # 数据库配置（如果需要）
+      - DATABASE_URL=sqlite:///app/chat.db
     volumes:
-      - n8n_data:/root/.n8n
+      # 持久化数据目录
+      - ./data:/app/data
+      # 如果需要挂载配置文件
+      - ./config:/app/config
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5678/health"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 5s
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - n8n-network
 
   mysql:
     image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
+    container_name: n8n-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: your_root_password
+      MYSQL_DATABASE: n8n_db
+      MYSQL_USER: n8n_user
+      MYSQL_PASSWORD: your_password
     ports:
       - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - n8n-network
 
-volumes:
-  n8n_data:
-    driver: local
-  mysql_data:
-    driver: local
+
+networks:
+  n8n-network:
+    driver: bridge
