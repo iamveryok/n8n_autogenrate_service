@@ -1,0 +1,92 @@
+{
+  "name": "FTP Logs Downloader",
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "timezone": "UTC"
+  },
+  "nodes": [
+    {
+      "id": "cron-trigger-1",
+      "name": "Hourly Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ftp-node-1",
+      "name": "FTP Check and Download",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "protocol": "ftp",
+        "operation": "download",
+        "path": "/usr/logs"
+      },
+      "credentials": {
+        "ftp": {
+          "id": "ftp-credentials",
+          "name": "FTP Server"
+        }
+      }
+    },
+    {
+      "id": "write-file-1",
+      "name": "Save Log File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "parameters": {
+        "fileName": "=/data/logs/{{$json.fileName}}",
+        "dataPropertyName": "data",
+        "options": []
+      }
+    }
+  ],
+  "connections": {
+    "Hourly Trigger": {
+      "main": [
+        [
+          {
+            "node": "FTP Check and Download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FTP Check and Download": {
+      "main": [
+        [
+          {
+            "node": "Save Log File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

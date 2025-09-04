@@ -1,0 +1,140 @@
+{
+  "name": "订单处理工作流",
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "timezone": "UTC"
+  },
+  "nodes": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "新订单触发器",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "new-order",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+      "name": "更新库存",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL连接"
+        }
+      },
+      "parameters": {
+        "operation": "update",
+        "table": "inventory",
+        "updateKey": "product_id",
+        "columns": {
+          "values": [
+            {
+              "column": "quantity",
+              "value": "={{ $json.quantity }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "c3d4e5f6-g7h8-9012-cdef-345678901234",
+      "name": "发送确认邮件",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtp-credentials",
+          "name": "SMTP连接"
+        }
+      },
+      "parameters": {
+        "to": "={{ $json.customer_email }}",
+        "subject": "订单确认 - {{ $json.order_id }}",
+        "message": "尊敬的客户，您的订单 {{ $json.order_id }} 已确认，我们将尽快处理。",
+        "htmlMessage": true
+      }
+    },
+    {
+      "id": "d4e5f6g7-h8i9-0123-defg-456789012345",
+      "name": "生成运输标签",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ],
+      "parameters": {
+        "url": "https://api.shipping.com/labels",
+        "authentication": "none",
+        "requestMethod": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "values": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "jsonParameters": true,
+        "bodyParametersJson": "{\"order_id\": \"{{ $json.order_id }}\", \"address\": \"{{ $json.shipping_address }}\"}"
+      }
+    }
+  ],
+  "connections": {
+    "新订单触发器": {
+      "main": [
+        [
+          {
+            "node": "更新库存",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "更新库存": {
+      "main": [
+        [
+          {
+            "node": "发送确认邮件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "发送确认邮件": {
+      "main": [
+        [
+          {
+            "node": "生成运输标签",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

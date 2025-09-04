@@ -1,0 +1,174 @@
+{
+  "name": "每日销售报告工作流",
+  "nodes": [
+    {
+      "id": "schedule-trigger",
+      "name": "每日定时触发",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyDay",
+              "hour": 8,
+              "minute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "crm-request",
+      "name": "CRM数据获取",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        480,
+        200
+      ],
+      "parameters": {
+        "url": "https://your-crm-api.com/sales-data",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth"
+      }
+    },
+    {
+      "id": "payment-request",
+      "name": "支付系统数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "url": "https://your-payment-api.com/transactions",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBearerAuth"
+      }
+    },
+    {
+      "id": "analytics-request",
+      "name": "分析平台数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        480,
+        400
+      ],
+      "parameters": {
+        "url": "https://your-analytics-api.com/metrics",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpQueryAuth"
+      }
+    },
+    {
+      "id": "data-processor",
+      "name": "数据处理",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// 处理三个数据源的数据\nconst crmData = $input.first().json;\nconst paymentData = $input.all()[1].json;\nconst analyticsData = $input.all()[2].json;\n\n// 生成报告内容\nconst report = {\n  date: new Date().toLocaleDateString(),\n  totalSales: paymentData.total_amount || 0,\n  newLeads: crmData.new_leads || 0,\n  conversionRate: analyticsData.conversion_rate || 0,\n  revenue: paymentData.revenue || 0\n};\n\nreturn [{\n  json: report\n}];"
+      }
+    },
+    {
+      "id": "email-sender",
+      "name": "发送邮件报告",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "fromEmail": "reports@yourcompany.com",
+        "toEmail": "management@yourcompany.com",
+        "subject": "每日销售报告 - {{ $json.date }}",
+        "message": "今日销售报告：\n总销售额: ${{ $json.totalSales }}\n新潜在客户: {{ $json.newLeads }}\n转化率: {{ $json.conversionRate }}%\n总收入: ${{ $json.revenue }}",
+        "emailType": "text"
+      }
+    }
+  ],
+  "connections": {
+    "每日定时触发": {
+      "main": [
+        [
+          {
+            "node": "CRM数据获取",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "支付系统数据",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "分析平台数据",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM数据获取": {
+      "main": [
+        [
+          {
+            "node": "数据处理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "支付系统数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "分析平台数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "数据处理": {
+      "main": [
+        [
+          {
+            "node": "发送邮件报告",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "n8n_MCP_builder": {
+      "command": "node",
+      "args": ["D:\\n8n_autogenrate_service\\mcp-n8n-workflow-builder\\build\\index.js"],
+      "transport": "stdio"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "name": "FTP Log File Monitor",
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "timezone": "UTC"
+  },
+  "nodes": [
+    {
+      "id": "cron-trigger-1",
+      "name": "Hourly Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ftp-node-1",
+      "name": "FTP Check Files",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "protocol": "ftp",
+        "operation": "list",
+        "path": "/usr/logs"
+      }
+    },
+    {
+      "id": "ftp-download-1",
+      "name": "FTP Download File",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "parameters": {
+        "protocol": "ftp",
+        "operation": "download",
+        "path": "={{$json.path}}",
+        "options": {
+          "download": true
+        }
+      }
+    },
+    {
+      "id": "write-file-1",
+      "name": "Save to Local",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ],
+      "parameters": {
+        "fileName": "={{$json.fileName}}",
+        "dataPropertyName": "data",
+        "options": []
+      }
+    }
+  ],
+  "connections": {
+    "Hourly Trigger": {
+      "main": [
+        [
+          {
+            "node": "FTP Check Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FTP Check Files": {
+      "main": [
+        [
+          {
+            "node": "FTP Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FTP Download File": {
+      "main": [
+        [
+          {
+            "node": "Save to Local",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

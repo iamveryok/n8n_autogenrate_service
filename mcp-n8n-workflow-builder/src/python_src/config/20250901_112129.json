@@ -1,0 +1,169 @@
+{
+  "name": "Daily Sales Report Workflow",
+  "nodes": [
+    {
+      "id": "schedule-trigger",
+      "name": "Daily Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        300,
+        200
+      ],
+      "parameters": {
+        "rule": {
+          "interval": "day",
+          "hour": 8,
+          "minute": 0
+        }
+      }
+    },
+    {
+      "id": "crm-data",
+      "name": "Fetch CRM Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        150
+      ],
+      "parameters": {
+        "url": "https://your-crm-api.com/sales-data",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth"
+      }
+    },
+    {
+      "id": "payment-data",
+      "name": "Fetch Payment Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        250
+      ],
+      "parameters": {
+        "url": "https://your-payment-api.com/transactions",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBearerAuth"
+      }
+    },
+    {
+      "id": "analytics-data",
+      "name": "Fetch Analytics Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        500,
+        350
+      ],
+      "parameters": {
+        "url": "https://your-analytics-api.com/metrics",
+        "method": "GET",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "apiKey"
+      }
+    },
+    {
+      "id": "process-data",
+      "name": "Process Sales Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        700,
+        250
+      ],
+      "parameters": {
+        "jsCode": "const crmData = $input.first().json;\nconst paymentData = $input.all()[1].json;\nconst analyticsData = $input.all()[2].json;\n\n// Process and combine data\nconst report = {\n  date: new Date().toISOString().split('T')[0],\n  totalSales: paymentData.total_amount || 0,\n  newLeads: crmData.new_leads || 0,\n  conversionRate: analyticsData.conversion_rate || 0,\n  revenue: paymentData.revenue || 0,\n  topProducts: crmData.top_products || []\n};\n\nreturn [{\n  json: report\n}];"
+      }
+    },
+    {
+      "id": "email-report",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        900,
+        250
+      ],
+      "parameters": {
+        "subject": "Daily Sales Report - {{ $json.date }}",
+        "body": "Daily Sales Summary:<br><br>\nTotal Sales: ${{ $json.totalSales }}<br>\nNew Leads: {{ $json.newLeads }}<br>\nConversion Rate: {{ $json.conversionRate }}%<br>\nRevenue: ${{ $json.revenue }}<br><br>\nTop Products:<br>\n{{#each $json.topProducts}}\n- {{this}}<br>\n{{/each}}",
+        "to": "sales-team@company.com",
+        "cc": "management@company.com"
+      }
+    }
+  ],
+  "connections": {
+    "Daily Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch CRM Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Payment Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Analytics Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch CRM Data": {
+      "main": [
+        [
+          {
+            "node": "Process Sales Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Payment Data": {
+      "main": [
+        [
+          {
+            "node": "Process Sales Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fetch Analytics Data": {
+      "main": [
+        [
+          {
+            "node": "Process Sales Data",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Process Sales Data": {
+      "main": [
+        [
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

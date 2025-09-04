@@ -1,0 +1,190 @@
+{
+  "name": "每日销售报告工作流",
+  "nodes": [
+    {
+      "id": "schedule-trigger",
+      "name": "每日定时触发器",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        300,
+        200
+      ],
+      "parameters": {
+        "rule": {
+          "interval": "day",
+          "hour": 8,
+          "minute": 0
+        }
+      }
+    },
+    {
+      "id": "crm-data",
+      "name": "获取CRM数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        150
+      ],
+      "parameters": {
+        "url": "https://api.crm-system.com/sales-data",
+        "method": "GET",
+        "authentication": "genericCredentialType"
+      },
+      "credentials": {
+        "genericCredentialType": {
+          "id": "crm-credentials",
+          "name": "CRM API凭证"
+        }
+      }
+    },
+    {
+      "id": "payment-data",
+      "name": "获取支付数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        250
+      ],
+      "parameters": {
+        "url": "https://api.payment-system.com/transactions",
+        "method": "GET",
+        "authentication": "genericCredentialType"
+      },
+      "credentials": {
+        "genericCredentialType": {
+          "id": "payment-credentials",
+          "name": "支付系统凭证"
+        }
+      }
+    },
+    {
+      "id": "analytics-data",
+      "name": "获取分析数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        350
+      ],
+      "parameters": {
+        "url": "https://api.analytics-platform.com/metrics",
+        "method": "GET",
+        "authentication": "genericCredentialType"
+      },
+      "credentials": {
+        "genericCredentialType": {
+          "id": "analytics-credentials",
+          "name": "分析平台凭证"
+        }
+      }
+    },
+    {
+      "id": "data-processor",
+      "name": "数据处理",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        250
+      ],
+      "parameters": {
+        "jsCode": "// 合并和处理来自三个系统的数据\nconst crmData = $input.first().json;\nconst paymentData = $input.all()[1].json;\nconst analyticsData = $input.all()[2].json;\n\n// 生成报告数据\nconst reportData = {\n  date: new Date().toLocaleDateString(),\n  totalSales: paymentData.total_amount || 0,\n  newLeads: crmData.new_leads || 0,\n  conversionRate: analyticsData.conversion_rate || 0,\n  revenue: paymentData.revenue || 0,\n  topProducts: crmData.top_products || []\n};\n\nreturn [{\n  json: reportData\n}];"
+      }
+    },
+    {
+      "id": "email-sender",
+      "name": "发送邮件报告",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        250
+      ],
+      "parameters": {
+        "subject": "每日销售报告 - {{ $json.date }}",
+        "body": "销售报告摘要：<br><br>\n总销售额: {{ $json.totalSales }}<br>\n新潜在客户: {{ $json.newLeads }}<br>\n转化率: {{ $json.conversionRate }}%<br>\n收入: {{ $json.revenue }}<br><br>\n热销产品:<br>\n{{#each $json.topProducts}}\n- {{this}}<br>\n{{/each}}",
+        "to": "sales-team@company.com",
+        "cc": "management@company.com"
+      },
+      "credentials": {
+        "smtp": {
+          "id": "email-credentials",
+          "name": "邮件服务器凭证"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "每日定时触发器": {
+      "main": [
+        [
+          {
+            "node": "获取CRM数据",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "获取支付数据",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "获取分析数据",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "获取CRM数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "获取支付数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "获取分析数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "数据处理": {
+      "main": [
+        [
+          {
+            "node": "发送邮件报告",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

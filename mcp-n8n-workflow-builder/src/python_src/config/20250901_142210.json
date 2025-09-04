@@ -1,0 +1,166 @@
+{
+  "name": "每日销售报告工作流",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "crm-node",
+      "name": "从CRM获取数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "crm-auth",
+          "name": "CRM认证"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "payment-node",
+      "name": "从支付系统获取数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        100,
+        500
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "payment-auth",
+          "name": "支付系统认证"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "analytics-node",
+      "name": "从分析平台获取数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "analytics-auth",
+          "name": "分析平台认证"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const crmData = $input.first().json;\nconst paymentData = $input.all()[1].json;\nconst analyticsData = $input.all()[2].json;\n\nconst report = {\n  date: new Date().toISOString().split('T')[0],\n  totalSales: paymentData.total_amount || 0,\n  newLeads: crmData.new_leads || 0,\n  conversionRate: analyticsData.conversion_rate || 0,\n  revenue: paymentData.revenue || 0\n};\n\nreturn [{\n  json: report\n}];"
+      },
+      "id": "process-data-node",
+      "name": "处理数据生成报告",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "subject": "每日销售报告 - {{ $json.date }}",
+        "body": "销售报告摘要：<br><br>\n总销售额: {{ $json.totalSales }}<br>\n新潜在客户: {{ $json.newLeads }}<br>\n转化率: {{ $json.conversionRate }}%<br>\n总收入: {{ $json.revenue }}<br><br>\n此报告由n8n自动生成。",
+        "to": "sales-team@company.com",
+        "cc": "management@company.com"
+      },
+      "id": "email-node",
+      "name": "发送邮件报告",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "interval": 86400
+      },
+      "id": "trigger-node",
+      "name": "每日触发",
+      "type": "n8n-nodes-base.interval",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "触发节点": {
+      "main": [
+        [
+          {
+            "node": "crm-node",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "payment-node",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "analytics-node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "从CRM获取数据": {
+      "main": [
+        [
+          {
+            "node": "process-data-node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "从支付系统获取数据": {
+      "main": [
+        [
+          {
+            "node": "process-data-node",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "从分析平台获取数据": {
+      "main": [
+        [
+          {
+            "node": "process-data-node",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "处理数据生成报告": {
+      "main": [
+        [
+          {
+            "node": "email-node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}

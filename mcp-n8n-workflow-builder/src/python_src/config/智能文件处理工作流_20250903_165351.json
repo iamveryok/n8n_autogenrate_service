@@ -1,0 +1,165 @@
+{
+  "name": "智能文件处理工作流",
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "timezone": "Asia/Shanghai"
+  },
+  "nodes": [
+    {
+      "id": "c4ca4238-a0b9-3382-8dcc-509a6f75849b",
+      "name": "监控目录",
+      "type": "n8n-nodes-base.pollTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "events": [
+          "fileAdded"
+        ],
+        "watchPath": "/path/to/monitored/directory",
+        "options": {
+          "includeBinary": true
+        }
+      }
+    },
+    {
+      "id": "c81e728d-9d4c-3f63-af06-7f89cc14862c",
+      "name": "文件类型检查",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "={{ $json.fileExtension }}",
+            "rightValue": "pdf"
+          },
+          "type": "string"
+        }
+      }
+    },
+    {
+      "id": "eccbc87e-4b5c-32a2-9b34-9c167e9c2b6f",
+      "name": "PDF处理函数",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        650,
+        200
+      ],
+      "parameters": {
+        "functionCode": "// PDF文件处理逻辑\nconst fileName = $json.fileName;\nconst fileSize = $json.fileSize;\n\n// 示例：添加处理标记\nitems[0].json.processed = true;\nitems[0].json.fileType = 'pdf';\nitems[0].json.processingDate = new Date().toISOString();\n\nreturn items;"
+      }
+    },
+    {
+      "id": "a87ff679-a2f3-3e2d-9187-f5aa6a2a93f2",
+      "name": "图片处理函数",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        650,
+        400
+      ],
+      "parameters": {
+        "functionCode": "// 图片文件处理逻辑\nconst fileName = $json.fileName;\nconst fileSize = $json.fileSize;\n\n// 示例：添加处理标记\nitems[0].json.processed = true;\nitems[0].json.fileType = 'image';\nitems[0].json.processingDate = new Date().toISOString();\n\nreturn items;"
+      }
+    },
+    {
+      "id": "e4da3b7f-bbce-3345-9777-2b0674a318d5",
+      "name": "保存PDF文件",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        850,
+        200
+      ],
+      "parameters": {
+        "fileName": "/processed/pdf/{{ $json.fileName }}",
+        "dataPropertyName": "binary",
+        "options": {
+          "append": false
+        }
+      }
+    },
+    {
+      "id": "1679091c-5a88-3e71-9d3a-8f141b3f5d8c",
+      "name": "保存图片文件",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        850,
+        400
+      ],
+      "parameters": {
+        "fileName": "/processed/images/{{ $json.fileName }}",
+        "dataPropertyName": "binary",
+        "options": {
+          "append": false
+        }
+      }
+    }
+  ],
+  "connections": {
+    "监控目录": {
+      "main": [
+        [
+          {
+            "node": "文件类型检查",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "文件类型检查": {
+      "main": [
+        [
+          {
+            "node": "PDF处理函数",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "图片处理函数",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF处理函数": {
+      "main": [
+        [
+          {
+            "node": "保存PDF文件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "图片处理函数": {
+      "main": [
+        [
+          {
+            "node": "保存图片文件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "name": "FTP Log File Downloader",
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "timezone": "UTC"
+  },
+  "nodes": [
+    {
+      "id": "cron-trigger-1",
+      "name": "Hourly Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ftp-list-1",
+      "name": "List FTP Files",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "protocol": "ftp",
+        "operation": "list",
+        "path": "/usr/logs"
+      }
+    },
+    {
+      "id": "if-check-1",
+      "name": "Check New Files",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "={{ $json.items.length }}",
+            "rightValue": "0"
+          },
+          "type": "number"
+        },
+        "options": []
+      }
+    },
+    {
+      "id": "ftp-download-1",
+      "name": "Download FTP File",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        850,
+        200
+      ],
+      "parameters": {
+        "protocol": "ftp",
+        "operation": "download",
+        "path": "={{ $json.path }}"
+      }
+    },
+    {
+      "id": "write-file-1",
+      "name": "Save to Local",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        200
+      ],
+      "parameters": {
+        "fileName": "={{ $json.name }}",
+        "dataPropertyName": "data",
+        "options": []
+      }
+    }
+  ],
+  "connections": {
+    "Hourly Trigger": {
+      "main": [
+        [
+          {
+            "node": "List FTP Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List FTP Files": {
+      "main": [
+        [
+          {
+            "node": "Check New Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check New Files": {
+      "main": [
+        [
+          {
+            "node": "Download FTP File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download FTP File": {
+      "main": [
+        [
+          {
+            "node": "Save to Local",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

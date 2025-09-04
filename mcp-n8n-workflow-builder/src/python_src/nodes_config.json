@@ -1,0 +1,2714 @@
+{
+    "nodes": [
+        {
+            "displayName": "Airtable",
+            "name": "airtable",
+            "type": "n8n-nodes-base.airtable",
+            "group": [
+                "input"
+            ],
+            "version": [
+                2,
+                2.1
+            ],
+            "description": "Read, update, write and delete data from Airtable",
+            "defaults": {
+                "name": "Airtable"
+            },
+            "inputs": [
+                "main"
+            ],
+            "outputs": [
+                "main"
+            ],
+            "credentials": [
+                {
+                    "name": "airtableTokenApi",
+                    "required": true,
+                    "displayOptions": {
+                        "show": {
+                            "authentication": [
+                                "airtableTokenApi"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "airtableOAuth2Api",
+                    "required": true,
+                    "displayOptions": {
+                        "show": {
+                            "authentication": [
+                                "airtableOAuth2Api"
+                            ]
+                        }
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "displayName": "Authentication",
+                    "name": "authentication",
+                    "type": "options",
+                    "options": [
+                        {
+                            "name": "Access Token",
+                            "value": "airtableTokenApi"
+                        },
+                        {
+                            "name": "OAuth2",
+                            "value": "airtableOAuth2Api"
+                        }
+                    ],
+                    "default": "airtableTokenApi"
+                },
+                {
+                    "displayName": "Resource",
+                    "name": "resource",
+                    "type": "options",
+                    "noDataExpression": true,
+                    "options": [
+                        {
+                            "name": "Base",
+                            "value": "base"
+                        },
+                        {
+                            "name": "Record",
+                            "value": "record"
+                        }
+                    ],
+                    "default": "record"
+                },
+                {
+                    "displayName": "Operation",
+                    "name": "operation",
+                    "type": "options",
+                    "noDataExpression": true,
+                    "displayOptions": {
+                        "show": {
+                            "resource": [
+                                "record"
+                            ]
+                        }
+                    },
+                    "options": [
+                        {
+                            "name": "Create",
+                            "value": "create",
+                            "description": "Create a new record in a table",
+                            "action": "Create a record"
+                        },
+                        {
+                            "name": "Create or Update",
+                            "value": "upsert",
+                            "description": "Create a new record, or update the current one if it already exists (upsert)",
+                            "action": "Create or update a record"
+                        },
+                        {
+                            "name": "Delete",
+                            "value": "deleteRecord",
+                            "description": "Delete a record from a table",
+                            "action": "Delete a record"
+                        },
+                        {
+                            "name": "Get",
+                            "value": "get",
+                            "description": "Retrieve a record from a table",
+                            "action": "Get a record"
+                        },
+                        {
+                            "name": "Search",
+                            "value": "search",
+                            "description": "Search for specific records or list all",
+                            "action": "Search records"
+                        },
+                        {
+                            "name": "Update",
+                            "value": "update",
+                            "description": "Update a record in a table",
+                            "action": "Update record"
+                        }
+                    ],
+                    "default": "get"
+                }
+            ]
+        },
+        {
+            "displayName": "If",
+            "name": "if",
+            "type": "n8n-nodes-base.if",
+            "group": [
+                "transform"
+            ],
+            "version": 2.2,
+            "description": "Route items to different branches (true/false)",
+            "defaults": {
+                "name": "If",
+                "color": "#408000"
+            },
+            "inputs": [
+                "main"
+            ],
+            "outputs": [
+                "main",
+                "main"
+            ],
+            "outputNames": [
+                "true",
+                "false"
+            ],
+            "properties": [
+                {
+                    "displayName": "Conditions",
+                    "name": "conditions",
+                    "placeholder": "Add Condition",
+                    "type": "filter",
+                    "default": {},
+                    "typeOptions": {
+                        "filter": {
+                            "version": 2
+                        }
+                    }
+                },
+                {
+                    "displayName": "Options",
+                    "name": "options",
+                    "type": "collection",
+                    "placeholder": "Add option",
+                    "default": {},
+                    "options": [
+                        {
+                            "displayName": "Ignore Case",
+                            "description": "Whether to ignore letter case when evaluating conditions",
+                            "name": "ignoreCase",
+                            "type": "boolean",
+                            "default": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "displayName": "Switch",
+            "name": "switch",
+            "type": "n8n-nodes-base.switch",
+            "group": [
+                "transform"
+            ],
+            "version": 3.2,
+            "description": "Route items depending on defined expression or rules",
+            "defaults": {
+                "name": "Switch",
+                "color": "#506000"
+            },
+            "inputs": [
+                "main"
+            ],
+            "outputs": [
+                "main"
+            ],
+            "properties": [
+                {
+                    "displayName": "Mode",
+                    "name": "mode",
+                    "type": "options",
+                    "noDataExpression": true,
+                    "options": [
+                        {
+                            "name": "Rules",
+                            "value": "rules"
+                        },
+                        {
+                            "name": "Expression",
+                            "value": "expression"
+                        }
+                    ],
+                    "default": "rules",
+                    "description": "How data should be routed"
+                },
+                {
+                    "displayName": "Routing Rules",
+                    "name": "rules",
+                    "placeholder": "Add Routing Rule",
+                    "type": "fixedCollection",
+                    "typeOptions": {
+                        "multipleValues": true
+                    },
+                    "default": {},
+                    "displayOptions": {
+                        "show": {
+                            "mode": [
+                                "rules"
+                            ]
+                        }
+                    },
+                    "options": [
+                        {
+                            "name": "values",
+                            "displayName": "Values",
+                            "values": [
+                                {
+                                    "displayName": "Conditions",
+                                    "name": "conditions",
+                                    "type": "filter",
+                                    "default": {}
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "displayName": "Options",
+                    "name": "options",
+                    "type": "collection",
+                    "placeholder": "Add option",
+                    "default": {},
+                    "displayOptions": {
+                        "show": {
+                            "mode": [
+                                "rules"
+                            ]
+                        }
+                    },
+                    "options": [
+                        {
+                            "displayName": "Fallback Output",
+                            "name": "fallbackOutput",
+                            "type": "options",
+                            "default": "none"
+                        },
+                        {
+                            "displayName": "Ignore Case",
+                            "name": "ignoreCase",
+                            "type": "boolean",
+                            "default": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "displayName": "Webhook",
+            "name": "webhook",
+            "type": "n8n-nodes-base.webhook",
+            "group": ["trigger"],
+            "version": 2,
+            "description": "Starts the workflow when a webhook is called",
+            "defaults": {"name": "Webhook"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Path", "name": "path", "type": "string", "default": "", "required": true, "description": "Webhook 路径"},
+                {"displayName": "HTTP Methods", "name": "httpMethod", "type": "multiOptions", "options": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"], "default": ["GET", "POST"], "description": "监听的 HTTP 方法"}
+            ]
+        },
+        {
+            "displayName": "HTTP Request",
+            "name": "httpRequest",
+            "type": "n8n-nodes-base.httpRequest",
+            "group": ["output"],
+            "version": 4.2,
+            "description": "Makes an HTTP request and returns the response data",
+            "defaults": {"name": "HTTP Request"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "HTTP Method", "name": "requestMethod", "type": "options", "options": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"], "default": "GET"},
+                {"displayName": "URL", "name": "url", "type": "string", "default": "", "required": true, "description": "请求地址"},
+                {"displayName": "Response Format", "name": "responseFormat", "type": "options", "options": ["JSON", "String", "File"], "default": "JSON"}
+            ]
+        },
+        {
+            "displayName": "Set",
+            "name": "set",
+            "type": "n8n-nodes-base.set",
+            "group": ["input"],
+            "version": 3.4,
+            "description": "Add or edit fields on an input item and optionally remove other fields",
+            "defaults": {"name": "Set"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {
+                    "displayName": "Mode",
+                    "name": "mode",
+                    "type": "options",
+                    "options": [
+                        {"name": "Manual Mapping", "value": "manual"},
+                        {"name": "JSON", "value": "raw"}
+                    ],
+                    "default": "manual"
+                },
+                {
+                    "displayName": "Fields to Set",
+                    "name": "fields",
+                    "type": "fixedCollection",
+                    "typeOptions": {"multipleValues": true, "sortable": true},
+                    "default": {},
+                    "options": [
+                        {
+                            "name": "values",
+                            "displayName": "Values",
+                            "values": [
+                                {"displayName": "Name", "name": "name", "type": "string", "default": ""},
+                                {
+                                    "displayName": "Type",
+                                    "name": "type",
+                                    "type": "options",
+                                    "options": [
+                                        {"name": "String", "value": "stringValue"},
+                                        {"name": "Number", "value": "numberValue"},
+                                        {"name": "Boolean", "value": "booleanValue"},
+                                        {"name": "Array", "value": "arrayValue"},
+                                        {"name": "Object", "value": "objectValue"}
+                                    ],
+                                    "default": "stringValue"
+                                },
+                                {
+                                    "displayName": "Value",
+                                    "name": "stringValue",
+                                    "type": "string",
+                                    "default": "",
+                                    "displayOptions": {"show": {"type": ["stringValue"]}}
+                                },
+                                {
+                                    "displayName": "Value",
+                                    "name": "numberValue",
+                                    "type": "string",
+                                    "default": "",
+                                    "displayOptions": {"show": {"type": ["numberValue"]}}
+                                },
+                                {
+                                    "displayName": "Value",
+                                    "name": "booleanValue",
+                                    "type": "options",
+                                    "default": "true",
+                                    "options": [
+                                        {"name": "True", "value": "true"},
+                                        {"name": "False", "value": "false"}
+                                    ],
+                                    "displayOptions": {"show": {"type": ["booleanValue"]}}
+                                },
+                                {
+                                    "displayName": "Value",
+                                    "name": "arrayValue",
+                                    "type": "string",
+                                    "default": "",
+                                    "displayOptions": {"show": {"type": ["arrayValue"]}}
+                                },
+                                {
+                                    "displayName": "Value",
+                                    "name": "objectValue",
+                                    "type": "json",
+                                    "default": "={}",
+                                    "displayOptions": {"show": {"type": ["objectValue"]}}
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "displayName": "Function",
+            "name": "function",
+            "type": "n8n-nodes-base.function",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Run custom function code which gets executed once and allows you to add, remove, change and replace items",
+            "defaults": {"name": "Function", "color": "#FF9922"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "JavaScript Code", "name": "functionCode", "type": "string", "default": "", "description": "要执行的 JS 代码"}
+            ]
+        },
+        {
+            "displayName": "Merge",
+            "name": "merge",
+            "type": "n8n-nodes-base.merge",
+            "group": ["transform"],
+            "version": 3.2,
+            "description": "Merges data of multiple streams once data from both is available",
+            "defaults": {"name": "Merge"},
+            "inputs": ["main", "main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Mode", "name": "mode", "type": "options", "options": ["Append", "Pass-through", "Wait", "Multiplex"], "default": "Append"}
+            ]
+        },
+        {
+            "displayName": "Split In Batches",
+            "name": "splitInBatches",
+            "type": "n8n-nodes-base.splitInBatches",
+            "group": ["organization"],
+            "version": 3,
+            "description": "Split data into batches and iterate over each batch",
+            "defaults": {"name": "Split In Batches"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Batch Size", "name": "batchSize", "type": "number", "default": 1000, "description": "每批处理的数据量"}
+            ]
+        },
+        {
+            "displayName": "Code",
+            "name": "code",
+            "type": "n8n-nodes-base.code",
+            "group": ["transform"],
+            "version": 2,
+            "description": "Run custom JavaScript or Python code",
+            "defaults": {"name": "Code"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Mode", "name": "mode", "type": "options", "options": ["runOnceForAllItems", "runOnceForEachItem"], "default": "runOnceForAllItems"},
+                {"displayName": "Language", "name": "language", "type": "options", "options": ["javaScript", "python"], "default": "javaScript"},
+                {"displayName": "JavaScript Code", "name": "jsCode", "type": "string", "default": ""},
+                {"displayName": "Python Code", "name": "pythonCode", "type": "string", "default": ""}
+            ]
+        },
+        {
+            "displayName": "Send Email",
+            "name": "emailSend",
+            "type": "n8n-nodes-base.emailSend",
+            "group": ["output"],
+            "version": 2.1,
+            "description": "Sends an email using SMTP protocol",
+            "defaults": {"name": "Send Email"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "To", "name": "to", "type": "string", "default": "", "required": true},
+                {"displayName": "Subject", "name": "subject", "type": "string", "default": ""},
+                {"displayName": "Text", "name": "text", "type": "string", "default": ""}
+            ]
+        },
+        {
+            "displayName": "Manual Trigger",
+            "name": "manualTrigger",
+            "type": "n8n-nodes-base.manualTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Runs the flow on clicking a button in n8n",
+            "defaults": {"name": "When clicking 'Execute workflow'", "color": "#909298"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [],
+            "parameters": {}
+        },
+        {
+            "displayName": "Cron",
+            "name": "cron",
+            "type": "n8n-nodes-base.cron",
+            "group": ["trigger", "schedule"],
+            "version": 1,
+            "description": "Triggers the workflow at a specific time",
+            "defaults": {"name": "Cron", "color": "#29a568"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Trigger Times", "name": "triggerTimes", "type": "fixedCollection", "typeOptions": {"multipleValues": true}, "default": {}, "description": "定时触发时间"}
+            ]
+        },
+        {
+            "displayName": "Elasticsearch",
+            "name": "elasticsearch",
+            "type": "n8n-nodes-base.elasticsearch",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Consume the Elasticsearch API",
+            "defaults": {"name": "Elasticsearch"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": ["document", "index"], "default": "document"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["get", "getAll", "create", "delete", "update"], "default": "get"}
+            ]
+        },
+        {
+            "displayName": "FTP",
+            "name": "ftp",
+            "type": "n8n-nodes-base.ftp",
+            "group": ["input"],
+            "version": 1,
+            "description": "Transfer files via FTP or SFTP",
+            "defaults": {"name": "FTP", "color": "#303050"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Protocol", "name": "protocol", "type": "options", "options": ["ftp", "sftp"], "default": "ftp", "description": "文件传输协议"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["download", "upload", "list", "delete", "rename"], "default": "download", "description": "操作类型"},
+                {"displayName": "Path", "name": "path", "type": "string", "default": "", "description": "文件或文件夹路径"}
+            ]
+        },
+        {
+            "displayName": "GetResponse",
+            "name": "getResponse",
+            "type": "n8n-nodes-base.getResponse",
+            "group": ["input"],
+            "version": 1,
+            "description": "Consume GetResponse API",
+            "defaults": {"name": "GetResponse"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Authentication", "name": "authentication", "type": "options", "options": ["apiKey", "oAuth2"], "default": "apiKey"},
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": ["contact"], "default": "contact"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["create", "delete", "get", "getAll"], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Git",
+            "name": "git",
+            "type": "n8n-nodes-base.git",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Control git.",
+            "defaults": {"name": "Git"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Authentication", "name": "authentication", "type": "options", "options": ["gitPassword", "none"], "default": "none"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["add", "addConfig", "clone", "commit", "fetch", "listConfig", "log", "pull", "push", "pushTags", "status", "tag", "userSetup"], "default": "log"},
+                {"displayName": "Repository Path", "name": "repositoryPath", "type": "string", "default": "", "description": "本地仓库路径"}
+            ]
+        },
+        {
+            "displayName": "GraphQL",
+            "name": "graphql",
+            "type": "n8n-nodes-base.graphql",
+            "group": ["input"],
+            "version": 1,
+            "description": "Makes a GraphQL request and returns the received data",
+            "defaults": {"name": "GraphQL"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Authentication", "name": "authentication", "type": "options", "options": ["basicAuth", "customAuth", "digestAuth", "headerAuth", "none", "oAuth1", "oAuth2", "queryAuth"], "default": "none"},
+                {"displayName": "HTTP Request Method", "name": "requestMethod", "type": "options", "options": ["GET", "POST"], "default": "POST"},
+                {"displayName": "Endpoint", "name": "endpoint", "type": "string", "default": "", "required": true, "description": "GraphQL 接口地址"},
+                {"displayName": "Query", "name": "query", "type": "string", "default": "", "required": true, "description": "GraphQL 查询语句"},
+                {"displayName": "Variables", "name": "variables", "type": "json", "default": "", "description": "查询变量（JSON）"},
+                {"displayName": "Operation Name", "name": "operationName", "type": "string", "default": "", "description": "操作名称（可选）"},
+                {"displayName": "Request Format", "name": "requestFormat", "type": "options", "options": ["json", "graphql"], "default": "json"}
+            ]
+        },
+        {
+            "displayName": "Iterable",
+            "name": "iterable",
+            "type": "n8n-nodes-base.iterable",
+            "group": ["input"],
+            "version": 1,
+            "description": "Consume Iterable API",
+            "defaults": {"name": "Iterable"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": ["event", "user", "userList"], "default": "user"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["track", "upsert", "delete", "get"], "default": "get"}
+            ]
+        },
+        {
+            "displayName": "JWT",
+            "name": "jwt",
+            "type": "n8n-nodes-base.jwt",
+            "group": ["transform"],
+            "version": 1,
+            "description": "JWT",
+            "defaults": {"name": "JWT"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["sign", "decode", "verify"], "default": "sign"}
+            ]
+        },
+        {
+            "displayName": "Kafka",
+            "name": "kafka",
+            "type": "n8n-nodes-base.kafka",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Sends messages to a Kafka topic",
+            "defaults": {"name": "Kafka"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "credentials": [
+                {"name": "kafka", "required": true}
+            ],
+            "properties": [
+                {"displayName": "Topic", "name": "topic", "type": "string", "default": "", "placeholder": "topic-name", "description": "Name of the queue of topic to publish to"},
+                {"displayName": "Send Input Data", "name": "sendInputData", "type": "boolean", "default": true, "description": "Whether to send the data the node receives as JSON to Kafka"},
+                {"displayName": "Message", "name": "message", "type": "string", "displayOptions": {"show": {"sendInputData": [false]}}, "default": "", "description": "The message to be sent"},
+                {"displayName": "JSON Parameters", "name": "jsonParameters", "type": "boolean", "default": false},
+                {"displayName": "Use Schema Registry", "name": "useSchemaRegistry", "type": "boolean", "default": false, "description": "Whether to use Confluent Schema Registry"},
+                {"displayName": "Schema Registry URL", "name": "schemaRegistryUrl", "type": "string", "required": true, "displayOptions": {"show": {"useSchemaRegistry": [true]}}, "placeholder": "https://schema-registry-domain:8081", "default": "", "description": "URL of the schema registry"},
+                {"displayName": "Use Key", "name": "useKey", "type": "boolean", "default": false, "description": "Whether to use a message key"},
+                {"displayName": "Key", "name": "key", "type": "string", "required": true, "displayOptions": {"show": {"useKey": [true]}}, "placeholder": "", "default": "", "description": "The message key"},
+                {"displayName": "Event Name", "name": "eventName", "type": "string", "required": true, "displayOptions": {"show": {"useSchemaRegistry": [true]}}, "default": "", "description": "Namespace and Name of Schema in Schema Registry (namespace.name)"},
+                {"displayName": "Headers", "name": "headersUi", "placeholder": "Add Header", "type": "fixedCollection", "displayOptions": {"show": {"jsonParameters": [false]}}, "typeOptions": {"multipleValues": true}, "default": {}, "options": [{"name": "headerValues", "displayName": "Header", "values": [{"displayName": "Key", "name": "key", "type": "string", "default": ""}, {"displayName": "Value", "name": "value", "type": "string", "default": ""}]}]},
+                {"displayName": "Headers (JSON)", "name": "headerParametersJson", "type": "json", "displayOptions": {"show": {"jsonParameters": [true]}}, "default": "", "description": "Header parameters as JSON (flat object)"},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Acks", "name": "acks", "type": "boolean", "default": false, "description": "Whether or not producer must wait for acknowledgement from all replicas"},
+                    {"displayName": "Compression", "name": "compression", "type": "boolean", "default": false, "description": "Whether to send the data in a compressed format using the GZIP codec"},
+                    {"displayName": "Timeout", "name": "timeout", "type": "number", "default": 30000, "description": "The time to await a response in ms"}
+                ]}
+            ]
+        },
+        {
+            "displayName": "MongoDB",
+            "name": "mongoDb",
+            "type": "n8n-nodes-base.mongoDb",
+            "group": ["input"],
+            "version": 1,
+            "description": "Find, insert and update documents in MongoDB",
+            "defaults": {"name": "MongoDB"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["aggregate", "delete", "find", "insert", "update"], "default": "find"},
+                {"displayName": "Collection", "name": "collection", "type": "string", "default": "", "description": "集合名称"}
+            ]
+        },
+        {
+            "displayName": "MySQL",
+            "name": "mySql",
+            "type": "n8n-nodes-base.mySql",
+            "group": ["input"],
+            "version": 2.4,
+            "description": "Get, add and update data in MySQL",
+            "defaults": {"name": "MySQL"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["executeQuery", "insert", "update", "delete"], "default": "executeQuery"},
+                {"displayName": "Table", "name": "table", "type": "string", "default": "", "description": "表名"}
+            ]
+        },
+        {
+            "displayName": "OpenAI",
+            "name": "openAi",
+            "type": "n8n-nodes-base.openAi",
+            "group": ["transform"],
+            "version": 1.1,
+            "description": "Consume Open AI",
+            "defaults": {"name": "OpenAI"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": ["chat", "image", "text"], "default": "text"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["create", "edit"], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Postgres",
+            "name": "postgres",
+            "type": "n8n-nodes-base.postgres",
+            "group": ["input"],
+            "version": 2.6,
+            "description": "Get, add and update data in Postgres",
+            "defaults": {"name": "Postgres"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["executeQuery", "insert", "update", "delete"], "default": "executeQuery"},
+                {"displayName": "Table", "name": "table", "type": "string", "default": "", "description": "表名"}
+            ]
+        },
+        {
+            "displayName": "RabbitMQ",
+            "name": "rabbitmq",
+            "type": "n8n-nodes-base.rabbitmq",
+            "group": ["transform"],
+            "version": 1.1,
+            "description": "Sends messages to a RabbitMQ topic",
+            "defaults": {"name": "RabbitMQ"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["sendMessage", "deleteMessage"], "default": "sendMessage"},
+                {"displayName": "Queue / Topic", "name": "queue", "type": "string", "default": "", "description": "队列或主题名称"},
+                {"displayName": "Message", "name": "message", "type": "string", "default": "", "description": "要发送的消息"}
+            ]
+        },
+        {
+            "displayName": "Redis",
+            "name": "redis",
+            "type": "n8n-nodes-base.redis",
+            "group": ["input"],
+            "version": 1,
+            "description": "Get, send and update data in Redis",
+            "defaults": {"name": "Redis"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["get", "set", "delete", "incr", "info", "keys", "pop", "publish", "push"], "default": "get"},
+                {"displayName": "Key", "name": "key", "type": "string", "default": "", "description": "键名"}
+            ]
+        },
+        {
+            "displayName": "S3",
+            "name": "s3",
+            "type": "n8n-nodes-base.s3",
+            "group": ["output"],
+            "version": 1,
+            "description": "Sends data to any S3-compatible service",
+            "defaults": {"name": "S3"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": ["bucket", "file", "folder"], "default": "file"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["create", "getAll", "search", "upload", "download", "delete"], "default": "upload"}
+            ]
+        },
+        {
+            "displayName": "Schedule Trigger",
+            "name": "scheduleTrigger",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "group": ["trigger", "schedule"],
+            "version": 1.2,
+            "description": "Triggers the workflow on a given schedule",
+            "defaults": {"name": "Schedule Trigger", "color": "#31C49F"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Trigger Rules", "name": "rule", "type": "fixedCollection", "typeOptions": {"multipleValues": true}, "default": {}, "description": "定时触发规则"}
+            ]
+        },
+        {
+            "displayName": "Filter",
+            "name": "filter",
+            "type": "n8n-nodes-base.filter",
+            "group": ["transform"],
+            "version": 2.2,
+            "description": "Remove items matching a condition",
+            "defaults": {"name": "Filter", "color": "#229eff"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Conditions", "name": "conditions", "type": "filter", "default": {}},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Ignore Case", "name": "ignoreCase", "type": "boolean", "default": true}
+                ]}
+            ]
+        },
+        {
+            "displayName": "Read Binary File",
+            "name": "readBinaryFile",
+            "type": "n8n-nodes-base.readBinaryFile",
+            "group": ["input"],
+            "version": 1,
+            "description": "Reads a binary file from disk",
+            "defaults": {"name": "Read Binary File", "color": "#449922"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "File Path", "name": "filePath", "type": "string", "default": "", "required": true, "description": "要读取的文件路径"},
+                {"displayName": "Property Name", "name": "dataPropertyName", "type": "string", "default": "data", "required": true, "description": "写入二进制数据的字段名"}
+            ]
+        },
+        {
+            "displayName": "Write Binary File",
+            "name": "writeBinaryFile",
+            "type": "n8n-nodes-base.writeBinaryFile",
+            "group": ["output"],
+            "version": 1,
+            "description": "Writes a binary file to disk",
+            "defaults": {"name": "Write Binary File", "color": "#CC2233"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "File Name", "name": "fileName", "type": "string", "default": "", "required": true, "description": "要写入的文件路径"},
+                {"displayName": "Property Name", "name": "dataPropertyName", "type": "string", "default": "data", "required": true, "description": "包含要写入数据的二进制字段名"},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Append", "name": "append", "type": "boolean", "default": false, "description": "是否追加到已有文件"}
+                ]}
+            ]
+        },
+        {
+            "displayName": "Convert to/from binary data",
+            "name": "moveBinaryData",
+            "type": "n8n-nodes-base.moveBinaryData",
+            "group": ["transform"],
+            "version": 1.1,
+            "description": "Move data between binary and JSON properties",
+            "defaults": {"name": "Convert to/from binary data", "color": "#7722CC"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Mode", "name": "mode", "type": "options", "options": ["binaryToJson", "jsonToBinary"], "default": "binaryToJson", "description": "转换方向"}
+            ]
+        },
+        {
+            "displayName": "Extract from File",
+            "name": "extractFromFile",
+            "type": "n8n-nodes-base.extractFromFile",
+            "group": ["input"],
+            "version": 1,
+            "description": "Convert binary data to JSON",
+            "defaults": {"name": "Extract from File"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": ["csv", "html", "fromIcs", "fromJson", "ods", "pdf", "rtf", "text", "xml", "xls", "xlsx", "binaryToPropery"], "default": "csv", "description": "提取类型"}
+            ]
+        },
+        {
+            "displayName": "Spreadsheet File",
+            "name": "spreadsheetFile",
+            "type": "n8n-nodes-base.spreadsheetFile",
+            "group": ["transform"],
+            "version": 2,
+            "description": "Reads and writes data from a spreadsheet file like CSV, XLS, ODS, etc",
+            "defaults": {"name": "Spreadsheet File"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": []
+        },
+        {
+            "displayName": "Sort",
+            "name": "sort",
+            "type": "n8n-nodes-base.sort",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Change items order",
+            "defaults": {"name": "Sort"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Type", "name": "type", "type": "options", "options": [
+                    {"name": "Simple", "value": "simple"},
+                    {"name": "Random", "value": "random"},
+                    {"name": "Code", "value": "code"}
+                ], "default": "simple", "description": "排序类型"},
+                {"displayName": "Fields To Sort By", "name": "sortFieldsUi", "type": "fixedCollection", "typeOptions": {"multipleValues": true}, "placeholder": "Add Field To Sort By", "options": [
+                    {"name": "sortField", "displayName": "Field", "values": [
+                        {"displayName": "Field Name", "name": "fieldName", "type": "string", "default": "", "description": "排序字段名"},
+                        {"displayName": "Order", "name": "order", "type": "options", "options": [
+                            {"name": "Ascending", "value": "ascending"},
+                            {"name": "Descending", "value": "descending"}
+                        ], "default": "ascending", "description": "排序顺序"}
+                    ]}
+                ], "default": {}, "description": "排序字段", "displayOptions": {"show": {"type": ["simple"]}}},
+                {"displayName": "Code", "name": "code", "type": "string", "default": "// The two items to compare are in the variables a and b\n// Access the fields in a.json and b.json\n// Return -1 if a should go before b\n// Return 1 if b should go before a\n// Return 0 if there's no difference\n\nfieldName = 'myField';\n\nif (a.json[fieldName] < b.json[fieldName]) {\n  return -1;\n}\nif (a.json[fieldName] > b.json[fieldName]) {\n  return 1;\n}\nreturn 0;", "description": "自定义排序代码", "displayOptions": {"show": {"type": ["code"]}}},
+                {"displayName": "Options", "name": "options", "type": "collection", "placeholder": "Add Field", "default": {}, "displayOptions": {"show": {"type": ["simple"]}}, "options": [
+                    {"displayName": "Disable Dot Notation", "name": "disableDotNotation", "type": "boolean", "default": false, "description": "是否禁用点号引用子字段"}
+                ]}
+            ]
+        },
+        {
+            "displayName": "Limit",
+            "name": "limit",
+            "type": "n8n-nodes-base.limit",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Restrict the number of items",
+            "defaults": {"name": "Limit"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Max Items", "name": "maxItems", "type": "number", "typeOptions": {"minValue": 1}, "default": 1, "description": "最多保留多少条目"},
+                {"displayName": "Keep", "name": "keep", "type": "options", "options": [
+                    {"name": "First Items", "value": "firstItems"},
+                    {"name": "Last Items", "value": "lastItems"}
+                ], "default": "firstItems", "description": "保留前几条还是后几条"}
+            ]
+        },
+        {
+            "displayName": "Wait",
+            "name": "wait",
+            "type": "n8n-nodes-base.wait",
+            "group": ["helpers", "flow"],
+            "version": 1,
+            "description": "Pause workflow execution until a condition is met or a time has passed",
+            "defaults": {"name": "Wait"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Wait Amount", "name": "amount", "type": "number", "typeOptions": {"minValue": 0, "numberPrecision": 2}, "default": 1, "description": "等待时长"},
+                {"displayName": "Wait Unit", "name": "unit", "type": "options", "options": [
+                    {"name": "Seconds", "value": "seconds"},
+                    {"name": "Minutes", "value": "minutes"},
+                    {"name": "Hours", "value": "hours"},
+                    {"name": "Days", "value": "days"}
+                ], "default": "hours", "description": "等待单位"}
+            ]
+        },
+        {
+            "displayName": "HTML",
+            "name": "html",
+            "type": "n8n-nodes-base.html",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Work with HTML",
+            "defaults": {"name": "HTML"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Generate HTML Template", "value": "generateHtmlTemplate"},
+                    {"name": "Extract HTML Content", "value": "extractHtmlContent"},
+                    {"name": "Convert to HTML Table", "value": "convertToHtmlTable"}
+                ], "default": "generateHtmlTemplate", "description": "操作类型"},
+                {"displayName": "HTML Template", "name": "html", "type": "string", "default": "", "description": "HTML模板内容", "displayOptions": {"show": {"operation": ["generateHtmlTemplate"]}}},
+                {"displayName": "Extraction Values", "name": "extractionValues", "type": "fixedCollection", "typeOptions": {"multipleValues": true}, "default": {}, "options": [
+                    {"name": "values", "displayName": "Values", "values": [
+                        {"displayName": "Key", "name": "key", "type": "string", "default": "", "description": "提取后保存的字段名"},
+                        {"displayName": "CSS Selector", "name": "cssSelector", "type": "string", "default": "", "description": "CSS选择器"},
+                        {"displayName": "Return Value", "name": "returnValue", "type": "options", "options": [
+                            {"name": "Attribute", "value": "attribute"},
+                            {"name": "HTML", "value": "html"},
+                            {"name": "Text", "value": "text"},
+                            {"name": "Value", "value": "value"}
+                        ], "default": "text", "description": "返回内容类型"},
+                        {"displayName": "Attribute", "name": "attribute", "type": "string", "default": "", "description": "属性名，仅当Return Value为Attribute时"},
+                        {"displayName": "Return Array", "name": "returnArray", "type": "boolean", "default": false, "description": "是否返回数组"}
+                    ]}
+                ], "description": "提取字段设置", "displayOptions": {"show": {"operation": ["extractHtmlContent"]}}}
+            ]
+        },
+        {
+            "displayName": "Slack",
+            "name": "slack",
+            "type": "n8n-nodes-base.slack",
+            "group": ["output"],
+            "version": 2.3,
+            "description": "Sends data to Slack",
+            "defaults": {"name": "Slack"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Authentication", "name": "authentication", "type": "options", "options": [
+                    {"name": "Access Token", "value": "accessToken"},
+                    {"name": "OAuth2", "value": "oAuth2"}
+                ], "default": "accessToken", "description": "认证方式"},
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Channel", "value": "channel"},
+                    {"name": "File", "value": "file"},
+                    {"name": "Message", "value": "message"},
+                    {"name": "Reaction", "value": "reaction"},
+                    {"name": "Star", "value": "star"},
+                    {"name": "User", "value": "user"},
+                    {"name": "User Group", "value": "userGroup"}
+                ], "default": "message", "description": "资源类型"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Post", "value": "post", "description": "发送消息"},
+                    {"name": "Get", "value": "get", "description": "获取消息"},
+                    {"name": "Update", "value": "update", "description": "更新消息"},
+                    {"name": "Delete", "value": "delete", "description": "删除消息"}
+                ], "default": "post", "displayOptions": {"show": {"resource": ["message"]}}},
+                {"displayName": "Channel", "name": "channel", "type": "string", "default": "", "required": true, "description": "频道名称或ID", "displayOptions": {"show": {"resource": ["message"], "operation": ["post", "update"]}}},
+                {"displayName": "Text", "name": "text", "type": "string", "default": "", "required": true, "description": "消息内容", "displayOptions": {"show": {"resource": ["message"], "operation": ["post", "update"]}}},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Username", "name": "username", "type": "string", "default": "", "description": "发送者用户名"},
+                    {"displayName": "Icon URL", "name": "iconUrl", "type": "string", "default": "", "description": "头像URL"},
+                    {"displayName": "Icon Emoji", "name": "iconEmoji", "type": "string", "default": "", "description": "头像表情"}
+                ], "displayOptions": {"show": {"resource": ["message"], "operation": ["post", "update"]}}}
+            ]
+        },
+        {
+            "displayName": "Telegram",
+            "name": "telegram",
+            "type": "n8n-nodes-base.telegram",
+            "group": ["output"],
+            "version": 1.2,
+            "description": "Sends data to Telegram",
+            "defaults": {"name": "Telegram"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Chat", "value": "chat"},
+                    {"name": "Callback", "value": "callback"},
+                    {"name": "File", "value": "file"},
+                    {"name": "Message", "value": "message"}
+                ], "default": "message", "description": "资源类型"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send", "description": "发送消息"},
+                    {"name": "Get", "value": "get", "description": "获取消息"},
+                    {"name": "Edit", "value": "edit", "description": "编辑消息"},
+                    {"name": "Delete", "value": "delete", "description": "删除消息"}
+                ], "default": "send", "displayOptions": {"show": {"resource": ["message"]}}},
+                {"displayName": "Chat ID", "name": "chatId", "type": "string", "default": "", "required": true, "description": "聊天ID", "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}},
+                {"displayName": "Text", "name": "text", "type": "string", "default": "", "required": true, "description": "消息内容", "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}},
+                {"displayName": "Parse Mode", "name": "parseMode", "type": "options", "options": [
+                    {"name": "Markdown", "value": "Markdown"},
+                    {"name": "HTML", "value": "HTML"}
+                ], "default": "Markdown", "description": "解析模式", "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Disable Web Page Preview", "name": "disableWebPagePreview", "type": "boolean", "default": false, "description": "禁用网页预览"},
+                    {"displayName": "Disable Notification", "name": "disableNotification", "type": "boolean", "default": false, "description": "禁用通知"},
+                    {"displayName": "Reply To Message ID", "name": "replyToMessageId", "type": "number", "default": 0, "description": "回复消息ID"}
+                ], "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}}
+            ]
+        },
+        {
+            "displayName": "Discord",
+            "name": "discord",
+            "type": "n8n-nodes-base.discord",
+            "group": ["output"],
+            "version": 2,
+            "description": "Sends data to Discord",
+            "defaults": {"name": "Discord"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Channel", "value": "channel"},
+                    {"name": "Guild", "value": "guild"},
+                    {"name": "Message", "value": "message"},
+                    {"name": "User", "value": "user"}
+                ], "default": "message", "description": "资源类型"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send", "description": "发送消息"},
+                    {"name": "Get", "value": "get", "description": "获取消息"},
+                    {"name": "Edit", "value": "edit", "description": "编辑消息"},
+                    {"name": "Delete", "value": "delete", "description": "删除消息"}
+                ], "default": "send", "displayOptions": {"show": {"resource": ["message"]}}},
+                {"displayName": "Channel ID", "name": "channelId", "type": "string", "default": "", "required": true, "description": "频道ID", "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}},
+                {"displayName": "Content", "name": "content", "type": "string", "default": "", "required": true, "description": "消息内容", "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Username", "name": "username", "type": "string", "default": "", "description": "用户名"},
+                    {"displayName": "Avatar URL", "name": "avatarUrl", "type": "string", "default": "", "description": "头像URL"},
+                    {"displayName": "TTS", "name": "tts", "type": "boolean", "default": false, "description": "文字转语音"}
+                ], "displayOptions": {"show": {"resource": ["message"], "operation": ["send", "edit"]}}}
+            ]
+        },
+        {
+            "displayName": "Google Sheets",
+            "name": "googleSheets",
+            "type": "n8n-nodes-base.googleSheets",
+            "group": ["input", "output"],
+            "version": 4.6,
+            "description": "Read, update and write data to Google Sheets",
+            "defaults": {"name": "Google Sheets"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Authentication", "name": "authentication", "type": "options", "options": [
+                    {"name": "Service Account", "value": "serviceAccount"},
+                    {"name": "OAuth2 (recommended)", "value": "oAuth2"}
+                ], "default": "oAuth2", "description": "认证方式"},
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Document", "value": "spreadsheet"},
+                    {"name": "Sheet Within Document", "value": "sheet"}
+                ], "default": "sheet", "description": "资源类型"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Append", "value": "append", "description": "追加数据"},
+                    {"name": "Create", "value": "create", "description": "创建工作表"},
+                    {"name": "Delete", "value": "delete", "description": "删除数据"},
+                    {"name": "Get", "value": "get", "description": "获取数据"},
+                    {"name": "Read", "value": "read", "description": "读取数据"},
+                    {"name": "Update", "value": "update", "description": "更新数据"}
+                ], "default": "read", "displayOptions": {"show": {"resource": ["sheet"]}}},
+                {"displayName": "Spreadsheet ID", "name": "spreadsheetId", "type": "string", "default": "", "required": true, "description": "电子表格ID", "displayOptions": {"show": {"resource": ["sheet"]}}},
+                {"displayName": "Sheet Name", "name": "sheetName", "type": "string", "default": "", "required": true, "description": "工作表名称", "displayOptions": {"show": {"resource": ["sheet"]}}},
+                {"displayName": "Range", "name": "range", "type": "string", "default": "", "description": "数据范围（如A1:B10）", "displayOptions": {"show": {"resource": ["sheet"], "operation": ["read", "get", "update", "delete"]}}},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Value Render Option", "name": "valueRenderOption", "type": "options", "options": [
+                        {"name": "Formatted Value", "value": "FORMATTED_VALUE"},
+                        {"name": "Unformatted Value", "value": "UNFORMATTED_VALUE"},
+                        {"name": "Formula", "value": "FORMULA"}
+                    ], "default": "FORMATTED_VALUE", "description": "值渲染选项"}
+                ], "displayOptions": {"show": {"resource": ["sheet"], "operation": ["read", "get"]}}}
+            ]
+        },
+        {
+            "displayName": "Notion",
+            "name": "notion",
+            "type": "n8n-nodes-base.notion",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Notion API",
+            "defaults": {"name": "Notion"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Page", "value": "page"},
+                    {"name": "Database", "value": "database"}
+                ], "default": "page"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Search", "value": "search"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Google Drive",
+            "name": "googleDrive",
+            "type": "n8n-nodes-base.googleDrive",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Google Drive API",
+            "defaults": {"name": "Google Drive"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "File", "value": "file"},
+                    {"name": "Folder", "value": "folder"}
+                ], "default": "file"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Upload", "value": "upload"},
+                    {"name": "Download", "value": "download"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "upload"}
+            ]
+        },
+        {
+            "displayName": "Box",
+            "name": "box",
+            "type": "n8n-nodes-base.box",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Box API",
+            "defaults": {"name": "Box"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "File", "value": "file"},
+                    {"name": "Folder", "value": "folder"}
+                ], "default": "file"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Upload", "value": "upload"},
+                    {"name": "Download", "value": "download"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "upload"}
+            ]
+        },
+        {
+            "displayName": "Asana",
+            "name": "asana",
+            "type": "n8n-nodes-base.asana",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Asana API",
+            "defaults": {"name": "Asana"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Task", "value": "task"},
+                    {"name": "Project", "value": "project"}
+                ], "default": "task"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Monday.com",
+            "name": "mondayCom",
+            "type": "n8n-nodes-base.mondayCom",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Monday.com API",
+            "defaults": {"name": "Monday.com"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Board", "value": "board"},
+                    {"name": "Item", "value": "item"}
+                ], "default": "board"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Trello",
+            "name": "trello",
+            "type": "n8n-nodes-base.trello",
+            "group": ["transform"],
+            "version": 1,
+            "description": "Create, change and delete boards and cards",
+            "defaults": {"name": "Trello"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Attachment", "value": "attachment"},
+                    {"name": "Board", "value": "board"},
+                    {"name": "Board Member", "value": "boardMember"},
+                    {"name": "Card", "value": "card"},
+                    {"name": "Card Comment", "value": "cardComment"},
+                    {"name": "Checklist", "value": "checklist"},
+                    {"name": "Label", "value": "label"},
+                    {"name": "List", "value": "list"}
+                ], "default": "card", "description": "资源类型"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create", "description": "创建卡片"},
+                    {"name": "Get", "value": "get", "description": "获取卡片"},
+                    {"name": "Update", "value": "update", "description": "更新卡片"},
+                    {"name": "Delete", "value": "delete", "description": "删除卡片"},
+                    {"name": "Get All", "value": "getAll", "description": "获取所有卡片"}
+                ], "default": "create", "displayOptions": {"show": {"resource": ["card"]}}},
+                {"displayName": "Card ID", "name": "cardId", "type": "string", "default": "", "required": true, "description": "卡片ID", "displayOptions": {"show": {"resource": ["card"], "operation": ["get", "update", "delete"]}}},
+                {"displayName": "List ID", "name": "listId", "type": "string", "default": "", "required": true, "description": "列表ID", "displayOptions": {"show": {"resource": ["card"], "operation": ["create"]}}},
+                {"displayName": "Name", "name": "name", "type": "string", "default": "", "required": true, "description": "卡片名称", "displayOptions": {"show": {"resource": ["card"], "operation": ["create", "update"]}}},
+                {"displayName": "Description", "name": "description", "type": "string", "default": "", "description": "卡片描述", "displayOptions": {"show": {"resource": ["card"], "operation": ["create", "update"]}}},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create", "description": "创建列表"},
+                    {"name": "Get", "value": "get", "description": "获取列表"},
+                    {"name": "Get All", "value": "getAll", "description": "获取所有列表"}
+                ], "default": "create", "displayOptions": {"show": {"resource": ["list"]}}},
+                {"displayName": "Board ID", "name": "boardId", "type": "string", "default": "", "required": true, "description": "看板ID", "displayOptions": {"show": {"resource": ["list"], "operation": ["create"]}}},
+                {"displayName": "List Name", "name": "listName", "type": "string", "default": "", "required": true, "description": "列表名称", "displayOptions": {"show": {"resource": ["list"], "operation": ["create"]}}},
+                {"displayName": "Options", "name": "options", "type": "collection", "default": {}, "options": [
+                    {"displayName": "Due Date", "name": "dueDate", "type": "dateTime", "default": "", "description": "截止日期", "displayOptions": {"show": {"resource": ["card"], "operation": ["create", "update"]}}},
+                    {"displayName": "Position", "name": "position", "type": "string", "default": "bottom", "description": "位置", "displayOptions": {"show": {"resource": ["card"], "operation": ["create"]}}},
+                    {"displayName": "Labels", "name": "labels", "type": "string", "default": "", "description": "标签（逗号分隔）", "displayOptions": {"show": {"resource": ["card"], "operation": ["create", "update"]}}}
+                ]}
+            ]
+        },
+        {
+            "displayName": "Zendesk",
+            "name": "zendesk",
+            "type": "n8n-nodes-base.zendesk",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Zendesk API",
+            "defaults": {"name": "Zendesk"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Ticket", "value": "ticket"},
+                    {"name": "User", "value": "user"},
+                    {"name": "Organization", "value": "organization"}
+                ], "default": "ticket"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "ServiceNow",
+            "name": "serviceNow",
+            "type": "n8n-nodes-base.serviceNow",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with ServiceNow API",
+            "defaults": {"name": "ServiceNow"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Incident", "value": "incident"},
+                    {"name": "User", "value": "user"}
+                ], "default": "incident"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "SendGrid",
+            "name": "sendGrid",
+            "type": "n8n-nodes-base.sendGrid",
+            "group": ["output"],
+            "version": 1,
+            "description": "Send emails via SendGrid",
+            "defaults": {"name": "SendGrid"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"}
+                ], "default": "send"},
+                {"displayName": "To", "name": "to", "type": "string", "default": "", "required": true},
+                {"displayName": "Subject", "name": "subject", "type": "string", "default": ""},
+                {"displayName": "Text", "name": "text", "type": "string", "default": ""}
+            ]
+        },
+        {
+            "displayName": "Adalo",
+            "name": "adalo",
+            "type": "n8n-nodes-base.adalo",
+            "group": ["input"],
+            "version": 1,
+            "description": "Interact with Adalo API",
+            "defaults": {"name": "Adalo"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Collection", "value": "collection"},
+                    {"name": "Record", "value": "record"}
+                ], "default": "collection"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get All", "value": "getAll"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Create", "value": "create"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Typeform",
+            "name": "typeform",
+            "type": "n8n-nodes-base.typeform",
+            "group": ["input"],
+            "version": 1,
+            "description": "Interact with Typeform API",
+            "defaults": {"name": "Typeform"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Form", "value": "form"},
+                    {"name": "Response", "value": "response"}
+                ], "default": "form"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Twitter",
+            "name": "twitter",
+            "type": "n8n-nodes-base.twitter",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Twitter API",
+            "defaults": {"name": "Twitter"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Tweet", "value": "tweet"},
+                    {"name": "User", "value": "user"}
+                ], "default": "tweet"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Spotify",
+            "name": "spotify",
+            "type": "n8n-nodes-base.spotify",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Spotify API",
+            "defaults": {"name": "Spotify"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Track", "value": "track"},
+                    {"name": "Playlist", "value": "playlist"}
+                ], "default": "track"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "WooCommerce",
+            "name": "wooCommerce",
+            "type": "n8n-nodes-base.wooCommerce",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with WooCommerce API",
+            "defaults": {"name": "WooCommerce"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Order", "value": "order"},
+                    {"name": "Product", "value": "product"}
+                ], "default": "order"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Wordpress",
+            "name": "wordpress",
+            "type": "n8n-nodes-base.wordpress",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Wordpress API",
+            "defaults": {"name": "Wordpress"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Post", "value": "post"},
+                    {"name": "User", "value": "user"}
+                ], "default": "post"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Xero",
+            "name": "xero",
+            "type": "n8n-nodes-base.xero",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Xero API",
+            "defaults": {"name": "Xero"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Contact", "value": "contact"},
+                    {"name": "Invoice", "value": "invoice"}
+                ], "default": "contact"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Dropbox",
+            "name": "dropbox",
+            "type": "n8n-nodes-base.dropbox",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Dropbox API",
+            "defaults": {"name": "Dropbox"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "File", "value": "file"},
+                    {"name": "Folder", "value": "folder"}
+                ], "default": "file"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Upload", "value": "upload"},
+                    {"name": "Download", "value": "download"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "upload"}
+            ]
+        },
+        {
+            "displayName": "Mailchimp",
+            "name": "mailchimp",
+            "type": "n8n-nodes-base.mailchimp",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Mailchimp API",
+            "defaults": {"name": "Mailchimp"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "List", "value": "list"},
+                    {"name": "Campaign", "value": "campaign"}
+                ], "default": "list"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Hubspot",
+            "name": "hubspot",
+            "type": "n8n-nodes-base.hubspot",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Hubspot API",
+            "defaults": {"name": "Hubspot"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Contact", "value": "contact"},
+                    {"name": "Company", "value": "company"}
+                ], "default": "contact"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Pipedrive",
+            "name": "pipedrive",
+            "type": "n8n-nodes-base.pipedrive",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Pipedrive API",
+            "defaults": {"name": "Pipedrive"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Deal", "value": "deal"},
+                    {"name": "Person", "value": "person"}
+                ], "default": "deal"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "ClickUp",
+            "name": "clickup",
+            "type": "n8n-nodes-base.clickup",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with ClickUp API",
+            "defaults": {"name": "ClickUp"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Task", "value": "task"},
+                    {"name": "List", "value": "list"}
+                ], "default": "task"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Freshdesk",
+            "name": "freshdesk",
+            "type": "n8n-nodes-base.freshdesk",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Freshdesk API",
+            "defaults": {"name": "Freshdesk"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Ticket", "value": "ticket"},
+                    {"name": "Contact", "value": "contact"}
+                ], "default": "ticket"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Intercom",
+            "name": "intercom",
+            "type": "n8n-nodes-base.intercom",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Intercom API",
+            "defaults": {"name": "Intercom"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Contact", "value": "contact"},
+                    {"name": "Conversation", "value": "conversation"}
+                ], "default": "contact"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Redshift",
+            "name": "redshift",
+            "type": "n8n-nodes-base.redshift",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Amazon Redshift API",
+            "defaults": {"name": "Redshift"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Query", "value": "query"},
+                    {"name": "Insert", "value": "insert"}
+                ], "default": "query"},
+                {"displayName": "Table", "name": "table", "type": "string", "default": "", "description": "表名"}
+            ]
+        },
+        {
+            "displayName": "BigQuery",
+            "name": "bigquery",
+            "type": "n8n-nodes-base.bigquery",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Google BigQuery API",
+            "defaults": {"name": "BigQuery"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Query", "value": "query"},
+                    {"name": "Insert", "value": "insert"}
+                ], "default": "query"},
+                {"displayName": "Table", "name": "table", "type": "string", "default": "", "description": "表名"}
+            ]
+        },
+        {
+            "displayName": "Supabase",
+            "name": "supabase",
+            "type": "n8n-nodes-base.supabase",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Supabase API",
+            "defaults": {"name": "Supabase"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Table", "value": "table"},
+                    {"name": "Auth", "value": "auth"}
+                ], "default": "table"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Select", "value": "select"},
+                    {"name": "Insert", "value": "insert"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "select"}
+            ]
+        },
+        {
+            "displayName": "SurveyMonkey",
+            "name": "surveyMonkey",
+            "type": "n8n-nodes-base.surveyMonkey",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with SurveyMonkey API",
+            "defaults": {"name": "SurveyMonkey"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Survey", "value": "survey"},
+                    {"name": "Response", "value": "response"}
+                ], "default": "survey"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Toggl",
+            "name": "toggl",
+            "type": "n8n-nodes-base.toggl",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Toggl API",
+            "defaults": {"name": "Toggl"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "TimeEntry", "value": "timeEntry"},
+                    {"name": "Project", "value": "project"}
+                ], "default": "timeEntry"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Todoist",
+            "name": "todoist",
+            "type": "n8n-nodes-base.todoist",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Todoist API",
+            "defaults": {"name": "Todoist"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Task", "value": "task"},
+                    {"name": "Project", "value": "project"}
+                ], "default": "task"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Strava",
+            "name": "strava",
+            "type": "n8n-nodes-base.strava",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Strava API",
+            "defaults": {"name": "Strava"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Activity", "value": "activity"},
+                    {"name": "Athlete", "value": "athlete"}
+                ], "default": "activity"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Notion",
+            "name": "notion",
+            "type": "n8n-nodes-base.notion",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Notion API",
+            "defaults": {"name": "Notion"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Page", "value": "page"},
+                    {"name": "Database", "value": "database"}
+                ], "default": "page"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Search", "value": "search"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Google Drive",
+            "name": "googleDrive",
+            "type": "n8n-nodes-base.googleDrive",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Google Drive API",
+            "defaults": {"name": "Google Drive"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "File", "value": "file"},
+                    {"name": "Folder", "value": "folder"}
+                ], "default": "file"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Upload", "value": "upload"},
+                    {"name": "Download", "value": "download"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "upload"}
+            ]
+        },
+        {
+            "displayName": "Box",
+            "name": "box",
+            "type": "n8n-nodes-base.box",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Box API",
+            "defaults": {"name": "Box"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "File", "value": "file"},
+                    {"name": "Folder", "value": "folder"}
+                ], "default": "file"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Upload", "value": "upload"},
+                    {"name": "Download", "value": "download"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "upload"}
+            ]
+        },
+        {
+            "displayName": "Asana",
+            "name": "asana",
+            "type": "n8n-nodes-base.asana",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Asana API",
+            "defaults": {"name": "Asana"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Task", "value": "task"},
+                    {"name": "Project", "value": "project"}
+                ], "default": "task"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Monday.com",
+            "name": "mondayCom",
+            "type": "n8n-nodes-base.mondayCom",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Monday.com API",
+            "defaults": {"name": "Monday.com"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Board", "value": "board"},
+                    {"name": "Item", "value": "item"}
+                ], "default": "board"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Microsoft Teams",
+            "name": "microsoftTeams",
+            "type": "n8n-nodes-base.microsoftTeams",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Microsoft Teams API",
+            "defaults": {"name": "Microsoft Teams"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Message", "value": "message"},
+                    {"name": "Channel", "value": "channel"}
+                ], "default": "message"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "Google Calendar",
+            "name": "googleCalendar",
+            "type": "n8n-nodes-base.googleCalendar",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Google Calendar API",
+            "defaults": {"name": "Google Calendar"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Event", "value": "event"},
+                    {"name": "Calendar", "value": "calendar"}
+                ], "default": "event"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Gitlab",
+            "name": "gitlab",
+            "type": "n8n-nodes-base.gitlab",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Gitlab API",
+            "defaults": {"name": "Gitlab"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Issue", "value": "issue"},
+                    {"name": "Project", "value": "project"}
+                ], "default": "issue"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Bitbucket",
+            "name": "bitbucket",
+            "type": "n8n-nodes-base.bitbucket",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Bitbucket API",
+            "defaults": {"name": "Bitbucket"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Repository", "value": "repository"},
+                    {"name": "Issue", "value": "issue"}
+                ], "default": "repository"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Facebook",
+            "name": "facebook",
+            "type": "n8n-nodes-base.facebook",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Facebook API",
+            "defaults": {"name": "Facebook"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Page", "value": "page"},
+                    {"name": "Post", "value": "post"}
+                ], "default": "page"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Instagram",
+            "name": "instagram",
+            "type": "n8n-nodes-base.instagram",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Instagram API",
+            "defaults": {"name": "Instagram"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Media", "value": "media"},
+                    {"name": "User", "value": "user"}
+                ], "default": "media"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "LinkedIn",
+            "name": "linkedin",
+            "type": "n8n-nodes-base.linkedin",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with LinkedIn API",
+            "defaults": {"name": "LinkedIn"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Post", "value": "post"},
+                    {"name": "Profile", "value": "profile"}
+                ], "default": "post"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Zoom Trigger",
+            "name": "zoomTrigger",
+            "type": "n8n-nodes-base.zoomTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Zoom events",
+            "defaults": {"name": "Zoom Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Meeting Started", "value": "meeting.started"},
+                    {"name": "Meeting Ended", "value": "meeting.ended"}
+                ], "default": "meeting.started"}
+            ]
+        },
+        {
+            "displayName": "Shopify Trigger",
+            "name": "shopifyTrigger",
+            "type": "n8n-nodes-base.shopifyTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Shopify events",
+            "defaults": {"name": "Shopify Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Order Created", "value": "order.created"},
+                    {"name": "Product Updated", "value": "product.updated"}
+                ], "default": "order.created"}
+            ]
+        },
+        {
+            "displayName": "Salesforce",
+            "name": "salesforce",
+            "type": "n8n-nodes-base.salesforce",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Salesforce API",
+            "defaults": {"name": "Salesforce"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Account", "value": "account"},
+                    {"name": "Contact", "value": "contact"}
+                ], "default": "account"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Discord Trigger",
+            "name": "discordTrigger",
+            "type": "n8n-nodes-base.discordTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Discord events",
+            "defaults": {"name": "Discord Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Message Created", "value": "message.created"},
+                    {"name": "Message Deleted", "value": "message.deleted"}
+                ], "default": "message.created"}
+            ]
+        },
+        {
+            "displayName": "GitHub Trigger",
+            "name": "githubTrigger",
+            "type": "n8n-nodes-base.githubTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on GitHub events",
+            "defaults": {"name": "GitHub Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Push", "value": "push"},
+                    {"name": "Pull Request", "value": "pull_request"}
+                ], "default": "push"}
+            ]
+        },
+        {
+            "displayName": "Telegram Trigger",
+            "name": "telegramTrigger",
+            "type": "n8n-nodes-base.telegramTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Telegram events",
+            "defaults": {"name": "Telegram Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Message Received", "value": "message.received"},
+                    {"name": "Message Edited", "value": "message.edited"}
+                ], "default": "message.received"}
+            ]
+        },
+        {
+            "displayName": "Trello Trigger",
+            "name": "trelloTrigger",
+            "type": "n8n-nodes-base.trelloTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Trello events",
+            "defaults": {"name": "Trello Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Card Created", "value": "card.created"},
+                    {"name": "Card Updated", "value": "card.updated"}
+                ], "default": "card.created"}
+            ]
+        },
+        {
+            "displayName": "Jira Trigger",
+            "name": "jiraTrigger",
+            "type": "n8n-nodes-base.jiraTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Jira events",
+            "defaults": {"name": "Jira Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Issue Created", "value": "issue.created"},
+                    {"name": "Issue Updated", "value": "issue.updated"}
+                ], "default": "issue.created"}
+            ]
+        },
+        {
+            "displayName": "Hubspot Trigger",
+            "name": "hubspotTrigger",
+            "type": "n8n-nodes-base.hubspotTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Hubspot events",
+            "defaults": {"name": "Hubspot Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Contact Created", "value": "contact.created"},
+                    {"name": "Contact Updated", "value": "contact.updated"}
+                ], "default": "contact.created"}
+            ]
+        },
+        {
+            "displayName": "Microsoft Outlook",
+            "name": "microsoftOutlook",
+            "type": "n8n-nodes-base.microsoftOutlook",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Microsoft Outlook API",
+            "defaults": {"name": "Microsoft Outlook"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Mail", "value": "mail"},
+                    {"name": "Calendar", "value": "calendar"}
+                ], "default": "mail"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "Google Contacts",
+            "name": "googleContacts",
+            "type": "n8n-nodes-base.googleContacts",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Google Contacts API",
+            "defaults": {"name": "Google Contacts"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Calendly",
+            "name": "calendly",
+            "type": "n8n-nodes-base.calendly",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Calendly API",
+            "defaults": {"name": "Calendly"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Event", "value": "event"},
+                    {"name": "Invitee", "value": "invitee"}
+                ], "default": "event"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Twilio",
+            "name": "twilio",
+            "type": "n8n-nodes-base.twilio",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Twilio API",
+            "defaults": {"name": "Twilio"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Message", "value": "message"},
+                    {"name": "Call", "value": "call"}
+                ], "default": "message"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "Sendinblue",
+            "name": "sendinblue",
+            "type": "n8n-nodes-base.sendinblue",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Sendinblue API",
+            "defaults": {"name": "Sendinblue"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Email", "value": "email"},
+                    {"name": "Contact", "value": "contact"}
+                ], "default": "email"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "Intercom Trigger",
+            "name": "intercomTrigger",
+            "type": "n8n-nodes-base.intercomTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Intercom events",
+            "defaults": {"name": "Intercom Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Contact Created", "value": "contact.created"},
+                    {"name": "Conversation Created", "value": "conversation.created"}
+                ], "default": "contact.created"}
+            ]
+        },
+        {
+            "displayName": "Freshdesk Trigger",
+            "name": "freshdeskTrigger",
+            "type": "n8n-nodes-base.freshdeskTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Freshdesk events",
+            "defaults": {"name": "Freshdesk Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Ticket Created", "value": "ticket.created"},
+                    {"name": "Contact Created", "value": "contact.created"}
+                ], "default": "ticket.created"}
+            ]
+        },
+        {
+            "displayName": "Pipedrive Trigger",
+            "name": "pipedriveTrigger",
+            "type": "n8n-nodes-base.pipedriveTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Pipedrive events",
+            "defaults": {"name": "Pipedrive Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Deal Created", "value": "deal.created"},
+                    {"name": "Person Created", "value": "person.created"}
+                ], "default": "deal.created"}
+            ]
+        },
+        {
+            "displayName": "ClickUp Trigger",
+            "name": "clickupTrigger",
+            "type": "n8n-nodes-base.clickupTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on ClickUp events",
+            "defaults": {"name": "ClickUp Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "Task Created", "value": "task.created"},
+                    {"name": "List Created", "value": "list.created"}
+                ], "default": "task.created"}
+            ]
+        },
+        {
+            "displayName": "Dropbox Trigger",
+            "name": "dropboxTrigger",
+            "type": "n8n-nodes-base.dropboxTrigger",
+            "group": ["trigger"],
+            "version": 1,
+            "description": "Trigger workflow on Dropbox events",
+            "defaults": {"name": "Dropbox Trigger"},
+            "inputs": [],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Event", "name": "event", "type": "options", "options": [
+                    {"name": "File Uploaded", "value": "file.uploaded"},
+                    {"name": "File Deleted", "value": "file.deleted"}
+                ], "default": "file.uploaded"}
+            ]
+        },
+        {
+            "displayName": "Mailgun",
+            "name": "mailgun",
+            "type": "n8n-nodes-base.mailgun",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Mailgun API",
+            "defaults": {"name": "Mailgun"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "Plivo",
+            "name": "plivo",
+            "type": "n8n-nodes-base.plivo",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Plivo API",
+            "defaults": {"name": "Plivo"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Message", "value": "message"},
+                    {"name": "Call", "value": "call"}
+                ], "default": "message"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "SendPulse",
+            "name": "sendPulse",
+            "type": "n8n-nodes-base.sendPulse",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with SendPulse API",
+            "defaults": {"name": "SendPulse"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Email", "value": "email"},
+                    {"name": "Contact", "value": "contact"}
+                ], "default": "email"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "Mandrill",
+            "name": "mandrill",
+            "type": "n8n-nodes-base.mandrill",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Mandrill API",
+            "defaults": {"name": "Mandrill"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Send", "value": "send"},
+                    {"name": "Get", "value": "get"}
+                ], "default": "send"}
+            ]
+        },
+        {
+            "displayName": "ActiveCampaign",
+            "name": "activeCampaign",
+            "type": "n8n-nodes-base.activeCampaign",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with ActiveCampaign API",
+            "defaults": {"name": "ActiveCampaign"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Contact", "value": "contact"},
+                    {"name": "Deal", "value": "deal"}
+                ], "default": "contact"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "AcuityScheduling",
+            "name": "acuityScheduling",
+            "type": "n8n-nodes-base.acuityScheduling",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with AcuityScheduling API",
+            "defaults": {"name": "AcuityScheduling"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Appointment", "value": "appointment"},
+                    {"name": "Client", "value": "client"}
+                ], "default": "appointment"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "BambooHR",
+            "name": "bambooHr",
+            "type": "n8n-nodes-base.bambooHr",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with BambooHR API",
+            "defaults": {"name": "BambooHR"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Employee", "value": "employee"},
+                    {"name": "TimeOff", "value": "timeOff"}
+                ], "default": "employee"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "Harvest",
+            "name": "harvest",
+            "type": "n8n-nodes-base.harvest",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Harvest API",
+            "defaults": {"name": "Harvest"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "TimeEntry", "value": "timeEntry"},
+                    {"name": "Project", "value": "project"}
+                ], "default": "timeEntry"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Get", "value": "get"},
+                    {"name": "Get All", "value": "getAll"}
+                ], "default": "getAll"}
+            ]
+        },
+        {
+            "displayName": "GitHub",
+            "name": "github",
+            "type": "n8n-nodes-base.github",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with GitHub API",
+            "defaults": {"name": "GitHub"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Resource", "name": "resource", "type": "options", "options": [
+                    {"name": "Repository", "value": "repository"},
+                    {"name": "Issue", "value": "issue"}
+                ], "default": "repository"},
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Create", "value": "create"},
+                    {"name": "Get", "value": "get"},
+                    {"name": "Update", "value": "update"},
+                    {"name": "Delete", "value": "delete"}
+                ], "default": "create"}
+            ]
+        },
+        {
+            "displayName": "Bitly",
+            "name": "bitly",
+            "type": "n8n-nodes-base.bitly",
+            "group": ["output"],
+            "version": 1,
+            "description": "Interact with Bitly API",
+            "defaults": {"name": "Bitly"},
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "properties": [
+                {"displayName": "Operation", "name": "operation", "type": "options", "options": [
+                    {"name": "Shorten", "value": "shorten"},
+                    {"name": "Expand", "value": "expand"}
+                ], "default": "shorten"}
+            ]
+        },
+        {
+            "displayName": "EconML LinearDML API",
+            "name": "econMLDlinearMLApi",
+            "group": ["transform"],
+            "type": "CUSTOM.econMLDlinearMLApi",
+            "version": 1,
+            "description": "Estimate causal effects using Double Machine Learning (DML)",
+            "defaults": {
+                "name": "EconML LinearDML"
+            },
+            "inputs": ["main"],
+            "outputs": ["main"],
+            "credentials": [
+                {
+                    "name": "workflowGeneratorApi",
+                    "required": true
+                }
+            ],
+            "properties": [
+                {
+                    "displayName": "Treatment Type",
+                    "name": "isTBinary",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether treatment (T) is binary (0/1)"
+                },
+                {
+                    "displayName": "Outcome Model (Y)",
+                    "name": "modelY",
+                    "type": "options",
+                    "options": [
+                        {
+                            "name": "auto",
+                            "value": "auto"
+                        },
+                        {
+                            "name": "Lasso (CV)",
+                            "value": "lasso"
+                        },
+                        {
+                            "name": "linear",
+                            "value": "linear"
+                        },
+                        {
+                            "name": "poly",
+                            "value": "poly"
+                        },
+                        {
+                            "name": "forest",
+                            "value": "forest"
+                        },
+                        {
+                            "name": "gbf",
+                            "value": "gbf"
+                        },
+                        {
+                            "name": "nnet",
+                            "value": "nnet"
+                        },
+                        {
+                            "name": "automl",
+                            "value": "automl"
+                        }
+                    ],
+                    "default": "auto",
+                    "description": "Model to predict outcome variable Y"
+                },
+                {
+                    "displayName": "model_t",
+                    "name": "modelT",
+                    "type": "options",
+                    "options": [
+                        {
+                            "name": "auto",
+                            "value": "auto"
+                        },
+                        {
+                            "name": "Lasso (CV)",
+                            "value": "lasso"
+                        },
+                        {
+                            "name": "linear",
+                            "value": "linear"
+                        },
+                        {
+                            "name": "poly",
+                            "value": "poly"
+                        },
+                        {
+                            "name": "forest",
+                            "value": "forest"
+                        },
+                        {
+                            "name": "gbf",
+                            "value": "gbf"
+                        },
+                        {
+                            "name": "nnet",
+                            "value": "nnet"
+                        },
+                        {
+                            "name": "automl",
+                            "value": "automl"
+                        }
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "displayName": "Cross Validation Folds",
+                    "name": "cv",
+                    "type": "number",
+                    "default": 2,
+                    "description": "Number of CV folds for model training"
+                },
+                {
+                    "displayName": "API Endpoint",
+                    "name": "apiEndpoint",
+                    "type": "string",
+                    "default": "http://localhost:8000/econml/lineardml",
+                    "description": "URL of the EconML API endpoint"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,166 @@
+{
+  "name": "每日销售报告工作流",
+  "nodes": [
+    {
+      "id": "schedule-trigger",
+      "name": "每日定时触发器",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        300,
+        200
+      ],
+      "parameters": {
+        "rule": {
+          "interval": "day",
+          "hour": 8,
+          "minute": 0
+        }
+      }
+    },
+    {
+      "id": "crm-request",
+      "name": "CRM数据获取",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        150
+      ],
+      "parameters": {
+        "url": "https://api.crm.example.com/sales-data",
+        "authentication": "predefinedCredentialType",
+        "requestMethod": "GET"
+      }
+    },
+    {
+      "id": "payment-request",
+      "name": "支付系统数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        250
+      ],
+      "parameters": {
+        "url": "https://api.payment.example.com/transactions",
+        "authentication": "predefinedCredentialType",
+        "requestMethod": "GET"
+      }
+    },
+    {
+      "id": "analytics-request",
+      "name": "分析平台数据",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        350
+      ],
+      "parameters": {
+        "url": "https://api.analytics.example.com/metrics",
+        "authentication": "predefinedCredentialType",
+        "requestMethod": "GET"
+      }
+    },
+    {
+      "id": "data-processor",
+      "name": "数据处理节点",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        250
+      ],
+      "parameters": {
+        "jsCode": "// 合并和处理来自三个API的数据\nconst crmData = $input.first().json;\nconst paymentData = $input.all()[1].json;\nconst analyticsData = $input.all()[2].json;\n\n// 生成报告内容\nconst report = {\n  date: new Date().toLocaleDateString(),\n  totalSales: paymentData.total_amount || 0,\n  newLeads: crmData.new_leads || 0,\n  conversionRate: analyticsData.conversion_rate || 0,\n  revenue: paymentData.revenue || 0\n};\n\nreturn [{\n  json: report\n}];"
+      }
+    },
+    {
+      "id": "email-sender",
+      "name": "邮件发送",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        250
+      ],
+      "parameters": {
+        "subject": "每日销售报告 - {{ $json.date }}",
+        "body": "销售报告摘要：<br><br>\n总销售额: {{ $json.totalSales }}<br>\n新潜在客户: {{ $json.newLeads }}<br>\n转化率: {{ $json.conversionRate }}%<br>\n总收入: {{ $json.revenue }}<br><br>\n此报告由n8n自动生成。",
+        "to": "sales-team@example.com",
+        "fromEmail": "noreply@example.com"
+      }
+    }
+  ],
+  "connections": {
+    "每日定时触发器": {
+      "main": [
+        [
+          {
+            "node": "CRM数据获取",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "支付系统数据",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "分析平台数据",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM数据获取": {
+      "main": [
+        [
+          {
+            "node": "数据处理节点",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "支付系统数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理节点",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "分析平台数据": {
+      "main": [
+        [
+          {
+            "node": "数据处理节点",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "数据处理节点": {
+      "main": [
+        [
+          {
+            "node": "邮件发送",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Asia/Shanghai"
+  }
+}
