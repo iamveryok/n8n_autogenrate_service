@@ -30,6 +30,11 @@ COPY mcp-n8n-workflow-builder/conda_env/ /opt/conda/envs/n8n_env/
 # 一次性复制所有项目文件
 COPY . /app/
 
+# 安装依赖并构建项目
+WORKDIR /app/mcp-n8n-workflow-builder
+RUN npm install && npm run build
+WORKDIR /app
+
 # 复制启动脚本
 COPY start-services.sh /app/start-services.sh
 RUN chmod +x /app/start-services.sh
